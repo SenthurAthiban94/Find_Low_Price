@@ -29,7 +29,7 @@ class Customer extends CI_Model{
     
 
 
-    public function addnew_customer($customerdata){
+    public function addnew_customer($customerdata){ 
         if(count($customerdata)==6){
             $check_if_exist_array=array('Email_Id'=>$customerdata['Email_Id'],"Product_ID"=>$customerdata['Product_ID']);
             $result=$this->db->select('*')->from($this->tablename)->where($check_if_exist_array)->get();

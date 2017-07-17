@@ -53,32 +53,39 @@ class Customer extends CI_Model{
 
 
     public function edit_customer($customerdata){
-        if(!empty($customerdata['Customer_ID'])){
-            $result=$this->db->select('*')->from($this->tablename)->where('Customer_ID',$customerdata['Customer_ID'])->get();
+        if(!empty($customerdata['ID'])){
+            $result=$this->db->select('*')->from($this->tablename)->where('ID',$customerdata['ID'])->get();
             if($result->num_rows()=== 1){
-                $checkresult=$result->result_array();
-                if(($checkresult[0]['Customer_Name'] != $customerdata['Customer_Name']) || ($checkresult[0]['Customer_Password'] != $customerdata['Customer_Password']) || ($checkresult[0]['Customer_Phone_No'] != $customerdata['Customer_Phone_No']) || ($checkresult[0]['Customer_Email_ID'] != $customerdata['Customer_Email_ID']))
+                $this->db->where('ID',$customerdata['ID']);
+                $this->db->update($this->tablename,$customerdata);
+                if($this->db->affected_rows() == 1 )
                 {
-                    if(($checkresult[0]['Customer_Email_ID'] != $customerdata['Customer_Email_ID'])){
-                        $check_if_exist_array=array('Customer_Email_ID'=>$customerdata['Customer_Email_ID']);
-                        $result=$this->db->select('*')->from($this->tablename)->or_where($check_if_exist_array)->get();
-                        if($result->num_rows() > 0){
-                            $response=array("msg"=>"Updating Customer Details of Customer ID ".$customerdata['Customer_ID']." Failed, User Mail ID Already Registered!!","status"=>false);
-                            return $response;
-                        }
-                    } 
-                    $this->db->where('Customer_ID',$customerdata['Customer_ID']);
-                    $this->db->update($this->tablename,$customerdata);
-                    if($this->db->affected_rows() == 1 )
-                    {
-                        $response=array("msg"=>"Customer ".$customerdata['Customer_ID']." with Customer ID ".$customerdata['Customer_ID']." is Edited Successfully","status"=>true);
-                        return $response;
-                    }
-                }
-                else{
-                    $response=array("msg"=>"No change in Customer ID ".$customerdata['Customer_ID'],"status"=>false);
+                    $response=array("msg"=>"Customer ".$customerdata['Customer_ID']." with Customer ID ".$customerdata['Customer_ID']." is Edited Successfully","status"=>true);
                     return $response;
                 }
+                // $checkresult=$result->result_array();
+                // if(($checkresult[0]['Email_Id'] != $customerdata['Email_Id']) || ($checkresult[0]['Product_Domain'] != $customerdata['Product_Domain']) || ($checkresult[0]['Product_ID'] != $customerdata['Product_ID']) || ($checkresult[0]['Product_Name'] != $customerdata['Product_Name']))
+                // {
+                //     if(($checkresult[0]['Customer_Email_ID'] != $customerdata['Customer_Email_ID'])){
+                //         $check_if_exist_array=array('Customer_Email_ID'=>$customerdata['Customer_Email_ID']);
+                //         $result=$this->db->select('*')->from($this->tablename)->or_where($check_if_exist_array)->get();
+                //         if($result->num_rows() > 0){
+                //             $response=array("msg"=>"Updating Customer Details of Customer ID ".$customerdata['Customer_ID']." Failed, User Mail ID Already Registered!!","status"=>false);
+                //             return $response;
+                //         }
+                //     } 
+                //     $this->db->where('Customer_ID',$customerdata['Customer_ID']);
+                //     $this->db->update($this->tablename,$customerdata);
+                //     if($this->db->affected_rows() == 1 )
+                //     {
+                //         $response=array("msg"=>"Customer ".$customerdata['Customer_ID']." with Customer ID ".$customerdata['Customer_ID']." is Edited Successfully","status"=>true);
+                //         return $response;
+                //     }
+                // }
+                // else{
+                //     $response=array("msg"=>"No change in Customer ID ".$customerdata['Customer_ID'],"status"=>false);
+                //     return $response;
+                // }
             }
             else{
                 $response=array("msg"=>"Customer ".$customerdata['Customer_ID']." does not exist, Please Signup!!","status"=>false);

@@ -61,9 +61,10 @@ $route['translate_uri_dashes'] = FALSE;
 //Customer Routes 
 $route['api/v1/customer_details']['get']='cheapass_api/api/v1/customer_api/customer';
 $route['api/v1/customer_details']['post']='cheapass_api/api/v1/customer_api/customer';               //POST Customer
-$route['api/v1/customer_details']['delete']='cheapass_api/api/v1/customer_api/customer';             //DELETE all customers
-$route['api/v1/customer_details/(:num)']['get']='cheapass_api/api/v1/customer_api/customer/$1';      //GET particular customer
-$route['api/v1/customer_details/(:num)']['delete']='cheapass_api/api/v1/customer_api/customer/$1';   //DELETE particular customers
-$route['api/v1/customer_details/(:num)']['put']='cheapass_api/api/v1/customer_api/customer/$1';      //PUT particular customers
-$route['api/v1/customer_details']['put']='cheapass_api/api/v1/customer_api/customer';                //Check if no param for PUT
+// $route['api/v1/customer_details']['delete']='cheapass_api/api/v1/customer_api/customer';             //DELETE all customers
+// $route['api/v1/customer_details/(:num)']['get']='cheapass_api/api/v1/customer_api/customer/$1';      //GET particular customer
+// $route['api/v1/customer_details/(:num)']['delete']='cheapass_api/api/v1/customer_api/customer/$1';   //DELETE particular customers
+// $route['api/v1/customer_details/(:num)']['put']='cheapass_api/api/v1/customer_api/customer/$1';      //PUT particular customers
+// $route['api/v1/customer_details']['put']='cheapass_api/api/v1/customer_api/customer';                //Check if no param for PUT
 
+$route['api/v1/background_check_rates']['get']='cheapass_api/api/v1/customer_api/checkRates';

@@ -108,7 +108,7 @@ class Customer_api extends REST_Controller {
                 if(!empty($checkData)){
                     if(!empty($result=$this->Customer->edit_customer($checkData))){
                         if($result['status']){
-
+                            $Mail_status=SendMail($checkData,$value['Product_Price']);
                         }
                     }
                 }

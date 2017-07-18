@@ -60,7 +60,7 @@ class Customer extends CI_Model{
                 $this->db->update($this->tablename,$customerdata);
                 if($this->db->affected_rows() == 1 )
                 {
-                    $response=array("msg"=>"Customer ".$customerdata['Customer_ID']." with Customer ID ".$customerdata['Customer_ID']." is Edited Successfully","status"=>true);
+                    $response=array("msg"=>"Customer ".$customerdata['ID']." with Customer ID ".$customerdata['ID']." is Edited Successfully","status"=>true);
                     return $response;
                 }
                 // $checkresult=$result->result_array();

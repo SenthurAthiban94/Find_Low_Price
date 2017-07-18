@@ -21,7 +21,7 @@ function SendMail($updated_Product,$old_price){
     $mail->Port = 587;                                                                    // TCP port to connect to
 
     $mail->From = "senthurathibanprofile@gmail.com";
-    $mail->FromName = "Mailer";
+    $mail->FromName = "LowPrice Shopping";
     // $mail->AddAddress("josh@example.net", "Josh Adams");
     $mail->AddAddress($toMailID);                  // name is optional
     $mail->AddReplyTo("senthurathibanprofile@gmail.com", "Information");

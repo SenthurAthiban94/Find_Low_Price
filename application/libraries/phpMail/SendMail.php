@@ -8,6 +8,9 @@ function SendMail($updated_Product,$old_price){
     $toMailID=$updated_Product['Email_Id'];
     $productName=$updated_Product['Product_Name'];
     $new_price=$updated_Product['Product_Price'];
+    $productImageURL=$updated_Product['Product_Image_URL'];
+    ////////////////////////////////////////////////////////////////////////////////////////////////
+
     $mail = new PHPMailer;
 
     //$mail->SMTPDebug = 3;                                                               // Enable verbose debug output
@@ -35,6 +38,7 @@ function SendMail($updated_Product,$old_price){
     
     $mail->IsHTML(true);                                  // set email format to HTML
 
+//https://raw.githubusercontent.com/senthurathiban94/Find_Low_Price/master/images/Icon.png
     $mail->Subject = "Hurry! Your Product ".$productName." Cost is Reduced";
     $mail->Body    = '<html>
                     <head>
@@ -42,8 +46,8 @@ function SendMail($updated_Product,$old_price){
                     <body style="background-color:#e1e8f4;">
                     <a href='.$productPage_URL.' style="text-decoration:none;width:100%;height:100%;">
                         <h1 style="text-align:center;font-size:26px;padding-top:30px;">
-                            <div style="color:darkslategrey;font-family: Cooper;">Cheers!!! Your Product\'s Price has been Reduced<br>Grab it soon before it Increases</div>
-                            <img src="https://raw.githubusercontent.com/senthurathiban94/Find_Low_Price/master/images/Icon.png" style="height:200px;width:200px;">
+                            <div style="color:darkslategrey;font-family: Cooper;padding-bottom:30px;">Cheers!!! Your Product\'s Price has been Reduced<br>Grab it soon before it Increases</div>
+                            <img src='.$productImageURL.' style="height:250px;width:250px;"/>
                         </h1>
                         <div>
                             <h2 style="text-align:center;">

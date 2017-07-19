@@ -68,7 +68,7 @@ class Customer_api extends REST_Controller {
                     break;
             }
 
-            // $this->response(array("result"=>$data_to_store),200);
+            $this->response(array("result"=>$data_to_store),200);
             if(!empty($result=$this->Customer->addnew_customer($data_to_store))){
                 $this->response(array("msg"=>$result['msg'],"status"=>$result['status']),200);
             }
@@ -102,7 +102,7 @@ class Customer_api extends REST_Controller {
                             $checkData=$this->update_Amazon_Product_Details($value);
                         break;
                     case $this->sites[2] :
-                            // $checkData=$this->update_Flipkart_Product_Details($value);
+                            $checkData=$this->update_Flipkart_Product_Details($value);
                         break;
                 }
                 if(!empty($checkData)){
@@ -113,7 +113,7 @@ class Customer_api extends REST_Controller {
                     }
                 }
             }
-            $this->response(array("status"=>true,"msg"=>"Completed Processing!!"),200);             
+            $this->response(array("status"=>true,"msg"=>"Completed Processing!! Mails are sent to Users whose product cost is reduced"),200);             
             // $this->response($this->update_Amazon_Product_Details($value),200);
         }
         else{
@@ -188,13 +188,16 @@ class Customer_api extends REST_Controller {
         $unique_Product_Path = implode('/', array_slice($splitURL, 0, 4));
         if((strpos($path, '/dp/') !== false) || (strpos($path, '/gp/product/') !== false)) {
             $this->website->loadHTMLFile($url);
+            $Product_Image_URL=strtok($this->website->getElementById('imgTagWrapperId')->getElementsByTagName('img')[0]->getAttribute('src'),'?');
             if($this->website->getElementById('priceblock_ourprice')){
                 $priceTag=$this->website->getElementById('priceblock_ourprice');
             }
-            if($this->website->getElementById('priceblock_saleprice')){
-                $priceTag=$this->website->getElementById('priceblock_saleprice');
+            else{
+                if($this->website->getElementById('priceblock_saleprice')){
+                    $priceTag=$this->website->getElementById('priceblock_saleprice');
+                }
             }
-            if($priceTag){
+            if(!empty($priceTag)){
                 $finder = new DomXPath($this->website);
                 $classname="currencyINR";
                 $nodes = $finder->query("//td//span[contains(@class, '$classname')]");
@@ -208,6 +211,9 @@ class Customer_api extends REST_Controller {
                     $currency="USD";    
                 }
                 $product_price=trim($priceTag->nodeValue);
+                if(strpos($product_price, '-') !== false){
+                    $product_price=strtok($product_price, '-');
+                }
             }else{
                 $product_price="9999";
             }
@@ -219,7 +225,8 @@ class Customer_api extends REST_Controller {
                 "Product_ID"=>$unique_Product_Path,
                 "Product_Name"=>trim($this->website->getElementById('productTitle')->nodeValue),
                 "Product_Price"=>$product_price,
-                "Currency_Type"=>$currency
+                "Currency_Type"=>$currency,
+                "Product_Image_URL"=>$Product_Image_URL
             );
             return $customer;
         }
@@ -236,11 +243,15 @@ class Customer_api extends REST_Controller {
             $this->website->loadHTMLFile($url);
             $finder = new DomXPath($this->website);
             $Name = $finder->query("//div//div[contains(@class, '_2UDlNd')]");
+            $Product_Image_URL=strtok($finder->query("//div//div//img[contains(@class, 'sfescn')]")[0]->getAttribute('src'),'?');
             $product_Name=trim($Name[0]->nodeValue);
             $price = $finder->query("//div//div[contains(@class, '_1vC4OE _37U4_g')]");
             $priceTag=$price[0];
-            if($priceTag){
+            if(!empty($priceTag)){
                 $product_price=trim($priceTag->nodeValue);
+                if(strpos($product_price, '-') !== false){
+                    $product_price=strtok($product_price, '-');
+                }
             }else{
                 $product_price="9999";
             }
@@ -255,7 +266,8 @@ class Customer_api extends REST_Controller {
                 "Product_ID"=>$unique_Product_Path,
                 "Product_Name"=>$product_Name,
                 "Product_Price"=>$product_price,
-                "Currency_Type"=>$currency
+                "Currency_Type"=>$currency,
+                "Product_Image_URL"=>$Product_Image_URL
             );
             return $customer;
         }
@@ -271,8 +283,11 @@ class Customer_api extends REST_Controller {
             if($this->website->getElementById('priceblock_ourprice')){
                 $priceTag=$this->website->getElementById('priceblock_ourprice');
             }
-            if($this->website->getElementById('priceblock_saleprice')){
+            else
+            {
+                if($this->website->getElementById('priceblock_saleprice')){
                 $priceTag=$this->website->getElementById('priceblock_saleprice');
+                }
             }
             if(!empty($priceTag)){
                 $finder = new DomXPath($this->website);
@@ -285,24 +300,65 @@ class Customer_api extends REST_Controller {
                     }
                 }
                 $product_price=trim($priceTag->nodeValue);
+                if(strpos($product_price, '-') !== false){
+                    $product_price=strtok($product_price, '-');
+                }
                 $product_price = str_replace(' ', '', preg_replace('/[^A-Za-z0-9.\-]/', '', $product_price));
-                $calculated_price=$product['Product_Price'] - ($product['Product_Price'] * (1/10));
+                $calculated_price=$this->Decide_LowPrice_Level($product['Product_Price']);
                 if($product_price <= $calculated_price){
                     $product['Product_Price']=$product_price;
                     return $product;
-                }else{
-                    return false;
                 }
             }
-            else{
-                return false;
-            }
-        }else{
-            return "Not Loaded";
         }
         
+        return false;        
     }
     public function update_Flipkart_Product_Details($product){
+        $url="https://".$product['Product_Domain'].$product['Product_ID'];
+        $LoadContent=$this->website->loadHTMLFile($url);
+        if($LoadContent){
+            $finder = new DomXPath($this->website);
+            $price = $finder->query("//div//div[contains(@class, '_1vC4OE _37U4_g')]");
+            $priceTag=$price[0];
+            if(!empty($priceTag)){
+                $product_price=trim($priceTag->nodeValue);
+                if(strpos($product_price, '-') !== false){
+                    $product_price=strtok($product_price, '-');
+                }
+                $product_price = str_replace(' ', '', preg_replace('/[^A-Za-z0-9.\-]/', '', $product_price));
+                $calculated_price=$this->Decide_LowPrice_Level($product['Product_Price']);
+                if($product_price <= $calculated_price){
+                    $product['Product_Price']=$product_price;
+                    return $product;
+                }
+            }
+        }
 
+        return false;
+    }
+    public function Decide_LowPrice_Level($Price){
+        switch($Price){
+            case $Price < 1000:
+                 $discount=0.1;                        // 10%
+                 break;
+            case $Price > 1000 && $Price < 10000:
+                 $discount=0.05;                        // 5%
+                 break;
+            case $Price > 10000 && $Price < 15000:
+                 $discount=0.04;                        // 4%
+                 break;                 
+            case $Price > 15000 && $Price < 20000:
+                 $discount=0.03;                        // 3%
+                 break;
+            case $Price > 20000 && $Price < 25000:
+                 $discount=0.02;                        // 2%
+                 break;
+            default:
+                 $discount=0.01;                        // 1%
+                 break;
+        }
+        $Price=$Price - ($Price * $discount);
+        return $Price;
     }
 }

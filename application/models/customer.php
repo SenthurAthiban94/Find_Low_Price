@@ -30,7 +30,7 @@ class Customer extends CI_Model{
 
 
     public function addnew_customer($customerdata){ 
-        if(count($customerdata)==6){
+        if(count($customerdata)==7){
             $check_if_exist_array=array('Email_Id'=>$customerdata['Email_Id'],"Product_ID"=>$customerdata['Product_ID']);
             $result=$this->db->select('*')->from($this->tablename)->where($check_if_exist_array)->get();
             if($result->num_rows() > 0){
@@ -60,7 +60,7 @@ class Customer extends CI_Model{
                 $this->db->update($this->tablename,$customerdata);
                 if($this->db->affected_rows() == 1 )
                 {
-                    $response=array("msg"=>"Customer ".$customerdata['ID']." with Customer ID ".$customerdata['ID']." is Edited Successfully","status"=>true);
+                    $response=array("msg"=>"Customer ".$customerdata['ID']." with Customer ID ".$customerdata['Product_Image_URL']." is Edited Successfully","status"=>true);
                     return $response;
                 }
                 // $checkresult=$result->result_array();

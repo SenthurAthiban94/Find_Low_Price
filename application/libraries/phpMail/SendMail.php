@@ -11,38 +11,9 @@ function SendMail($updated_Product,$old_price){
     $new_price=$updated_Product['Product_Price'];
     $productImageURL=$updated_Product['Product_Image_URL'];
     $currency_symbol=getCurrency_symbol($updated_Product['Currency_Type']);
-    ////////////////////////////////////////////////////////////////////////////////////////////////
 
-    $mail = new PHPMailer;
-
-    //$mail->SMTPDebug = 3;                                                               // Enable verbose debug output
-
-    $mail->isSMTP();                                                                      // Set mailer to use SMTP
-    $mail->Host = 'smtp.gmail.com';                                                       // Specify main and backup SMTP servers
-    $mail->SMTPAuth = true;                                                               // Enable SMTP authentication
-    $mail->Username = 'senthurathibanprofile@gmail.com';                                  // SMTP username
-    $mail->Password = 'Senthur@profile';                                                  // SMTP password
-    $mail->SMTPSecure = 'tls';                                                            // Enable TLS encryption, `ssl` also accepted
-    $mail->Port = 587;                                                                    // TCP port to connect to
-
-    $mail->From = "senthurathibanprofile@gmail.com";
-    $mail->FromName = "LowPrice Shopping";
-    // $mail->AddAddress("josh@example.net", "Josh Adams");
-    $mail->AddAddress($toMailID);                  // name is optional
-    $mail->AddReplyTo("senthurathibanprofile@gmail.com", "Information");
-
-    
-    // $mail->addCC('cc@example.com');
-    // $mail->addBCC('bcc@example.com');
-    // $mail->WordWrap = 50;                                 // set word wrap to 50 characters
-    // $mail->AddAttachment("/var/tmp/file.tar.gz");         // add attachments
-    // $mail->AddAttachment("/tmp/image.jpg", "new.jpg");    // optional name
-    
-    $mail->IsHTML(true);                                  // set email format to HTML
-
-//https://raw.githubusercontent.com/senthurathiban94/Find_Low_Price/master/images/Icon.png
-    $mail->Subject = "Hurry! Your Product ".$productName." Cost is Reduced";
-    $mail->Body    = '<html>
+    $subject="Hurry! Your Product ".$productName." Cost is Reduced";
+    $bodyHTML='<html>
                     <head>
                     </head>
                     <body style="background-color:#e1e8f4;">
@@ -66,18 +37,69 @@ function SendMail($updated_Product,$old_price){
                         </a>
                     </body>
                 </html>';
-    $mail->AltBody = "This is the body in plain text for non-HTML mail clients";
 
-    // $mail->setFrom($sender_Mail, 'Messages from CheapAss '.$sender_Name);
-    // $mail->addReplyTo($sender_Mail , $sender_Name);
-    // $mail->addAddress('senthurathiban@gmail.com', 'Senthur Athiban');                     // Add a recipient
-    // $mail->addAddress('ellen@example.com');                                            // Name is optional
+    $plainHTML= "Cheers!!! Your Product\'s Price has been Reduced<br>Grab it soon before it Increases \n
+                 Your Product ".$productName." with Price is Reduced from ".$old_price." ".$currency_symbol." to ".$new_price." ".$currency_symbol.". Please Click on the following link to get your product ".$productPage_URL.".";    
     
-    if(!$mail->Send())
-    {
-        // echo "Mailer Error: " . $mail->ErrorInfo;
-        return false;
+
+
+
+// Normal PHP mail functions Settings
+
+    $headers = 'From: senthurathibanprofile@gmail.com' . "\r\n" .
+                'Reply-To: senthurathibanprofile@gmail.com' . "\r\n";
+    $headers .= "MIME-Version: 1.0\r\n";
+    $headers .= "Content-Type: text/html; charset=ISO-8859-1\r\n";
+
+    if(mail($toMailID, $subject, $bodyHTML, $headers)){
+        return true;
+    }else{
+        ////////////////////////////////////////////////////////////////////////////////////////////////
+
+        $mail = new PHPMailer;
+
+        //$mail->SMTPDebug = 3;                                                               // Enable verbose debug output
+
+        $mail->isSMTP();                                                                      // Set mailer to use SMTP
+        $mail->Host = 'smtp.gmail.com';                                                       // Specify main and backup SMTP servers
+        $mail->SMTPAuth = true;                                                               // Enable SMTP authentication
+        $mail->Username = 'senthurathibanprofile@gmail.com';                                  // SMTP username
+        $mail->Password = 'Senthur@profile';                                                  // SMTP password
+        $mail->SMTPSecure = 'tls';                                                            // Enable TLS encryption, `ssl` also accepted
+        $mail->Port = 587;                                                                    // TCP port to connect to
+
+        $mail->From = "senthurathibanprofile@gmail.com";
+        $mail->FromName = "LowPrice Shopping";
+        // $mail->AddAddress("josh@example.net", "Josh Adams");
+        $mail->AddAddress($toMailID);                  // name is optional
+        $mail->AddReplyTo("senthurathibanprofile@gmail.com", "Information");
+
+        
+        // $mail->addCC('cc@example.com');
+        // $mail->addBCC('bcc@example.com');
+        // $mail->WordWrap = 50;                                 // set word wrap to 50 characters
+        // $mail->AddAttachment("/var/tmp/file.tar.gz");         // add attachments
+        // $mail->AddAttachment("/tmp/image.jpg", "new.jpg");    // optional name
+        
+        $mail->IsHTML(true);                                  // set email format to HTML
+
+    //https://raw.githubusercontent.com/senthurathiban94/Find_Low_Price/master/images/Icon.png
+        $mail->Subject = $subject;
+        $mail->Body    = $bodyHTML;
+        $mail->AltBody = $plainHTML;
+
+        // $mail->setFrom($sender_Mail, 'Messages from CheapAss '.$sender_Name);
+        // $mail->addReplyTo($sender_Mail , $sender_Name);
+        // $mail->addAddress('senthurathiban@gmail.com', 'Senthur Athiban');                     // Add a recipient
+        // $mail->addAddress('ellen@example.com');                                            // Name is optional
+        
+        if(!$mail->Send())
+        {
+            // echo "Mailer Error: " . $mail->ErrorInfo;
+            return false;
+        }    
     }
+
     return true;
 
 }

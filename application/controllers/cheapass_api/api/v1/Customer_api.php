@@ -68,7 +68,7 @@ class Customer_api extends REST_Controller {
                     break;
             }
 
-            $this->response(array("result"=>$data_to_store),200);
+            // $this->response(array("result"=>$data_to_store),200);
             if(!empty($result=$this->Customer->addnew_customer($data_to_store))){
                 $this->response(array("msg"=>$result['msg'],"status"=>$result['status']),200);
             }
@@ -114,7 +114,7 @@ class Customer_api extends REST_Controller {
                 }
             }
             $this->response(array("status"=>true,"msg"=>"Completed Processing!! Mails are sent to Users whose product cost is reduced"),200);             
-            // $this->response($this->update_Amazon_Product_Details($value),200);
+            // $this->response($Mail_status,200);
         }
         else{
             $this->response(array("msg"=>"No data to Update Request in the Database!!","status"=>false),404);

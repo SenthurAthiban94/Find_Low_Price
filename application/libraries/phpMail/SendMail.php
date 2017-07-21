@@ -2,6 +2,7 @@
 defined('BASEPATH') OR exit('No direct script access allowed');
 
 require 'mail_lib/PHPMailerAutoload.php';
+require APPPATH . '/libraries/currency.php';
 
 function SendMail($updated_Product,$old_price){
     $productPage_URL="https://".$updated_Product['Product_Domain'].$updated_Product['Product_ID'];
@@ -9,6 +10,7 @@ function SendMail($updated_Product,$old_price){
     $productName=$updated_Product['Product_Name'];
     $new_price=$updated_Product['Product_Price'];
     $productImageURL=$updated_Product['Product_Image_URL'];
+    $currency_symbol=getCurrency_symbol($updated_Product['Currency_Type']);
     ////////////////////////////////////////////////////////////////////////////////////////////////
 
     $mail = new PHPMailer;
@@ -53,8 +55,8 @@ function SendMail($updated_Product,$old_price){
                             <h2 style="text-align:center;">
                                 <span style="font-size:26px;color:darkslateblue;"><u>'.$productName.'</u></span>
                                 <div style="padding:20px;color:darkslategrey;">
-                                <span style="text-decoration: line-through;color:black;"><span style="min-width:500px;padding-left:20px;padding-right:20px;color:red;font-size:42px;">'.$old_price.' &#x20b9;</span></span>
-                                Now At <span style="min-width:500px;padding-left:20px;padding-right:20px;color:limegreen;font-size:62px;">'.$new_price.' &#x20b9;</span>
+                                <span style="text-decoration: line-through;color:black;"><span style="min-width:500px;padding-left:20px;padding-right:20px;color:red;font-size:42px;">'.$old_price.' '.$currency_symbol.'</span></span>
+                                Now At <span style="min-width:500px;padding-left:20px;padding-right:20px;color:limegreen;font-size:62px;">'.$new_price.' '.$currency_symbol.'</span>
                                 </div>
                                 <div style="padding:10px;padding-top:30px;padding-bottom:50px;">
                                     <input type="button" style="font-size:32px;background-color:#4286f4;color:white;width:200px;height:50px;" value="Buy Now"/>

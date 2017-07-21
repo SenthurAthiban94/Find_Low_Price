@@ -58,13 +58,17 @@ $route['translate_uri_dashes'] = FALSE;
 | Sample REST API Routes
 | -------------------------------------------------------------------------
 */
-//Customer Routes 
-$route['api/v1/customer_details']['get']='cheapass_api/api/v1/customer_api/customer';
-$route['api/v1/customer_details']['post']='cheapass_api/api/v1/customer_api/customer';               //POST Customer
+// $route['api/example/users/(:num)'] = 'api/example/users/id/$1'; // Example 4
+// $route['api/example/users/(:num)(\.)([a-zA-Z0-9_-]+)(.*)'] = 'api/example/users/id/$1/format/$3$4'; // Example 8
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // $route['api/v1/customer_details']['delete']='cheapass_api/api/v1/customer_api/customer';             //DELETE all customers
 // $route['api/v1/customer_details/(:num)']['get']='cheapass_api/api/v1/customer_api/customer/$1';      //GET particular customer
 // $route['api/v1/customer_details/(:num)']['delete']='cheapass_api/api/v1/customer_api/customer/$1';   //DELETE particular customers
 // $route['api/v1/customer_details/(:num)']['put']='cheapass_api/api/v1/customer_api/customer/$1';      //PUT particular customers
 // $route['api/v1/customer_details']['put']='cheapass_api/api/v1/customer_api/customer';                //Check if no param for PUT
 
-$route['api/v1/background_check_rates']['get']='cheapass_api/api/v1/customer_api/checkRates';
+$route[USER_API_URL]['get']='cheapass_api/api/v1/customer_api/customer';
+$route[USER_API_URL]['post']='cheapass_api/api/v1/customer_api/customer';               //POST Customer
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+$route[CRON_CHECK_API]['get']='cheapass_api/api/v1/customer_api/checkRates';

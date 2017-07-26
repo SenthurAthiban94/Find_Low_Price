@@ -6,6 +6,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 /** @noinspection PhpIncludeInspection */
 require APPPATH . '/libraries/REST_Controller.php';
 require APPPATH . '/libraries/phpMail/SendMail.php';
+require APPPATH . '/libraries/shortenURL.php';
 
 use Restserver\Libraries\REST_Controller;
 
@@ -68,7 +69,7 @@ class Customer_api extends REST_Controller {
                     break;
             }
 
-            // $this->response(array("result"=>$data_to_store),200);
+            // $this->response(array("results"=>$data_to_store),200);
             if(!empty($result=$this->Customer->addnew_customer($data_to_store))){
                 $this->response(array("msg"=>$result['msg'],"status"=>$result['status']),200);
             }
@@ -218,6 +219,10 @@ class Customer_api extends REST_Controller {
                 $product_price="9999";
             }
             $product_price = str_replace(' ', '', preg_replace('/[^A-Za-z0-9.\-]/', '', $product_price));
+            if(updateShortURL($Product_Image_URL))
+            {
+                $Product_Image_URL=updateShortURL($Product_Image_URL);
+            }
             ///////////////////////////////////////////////////////////////// -- After processing
             $customer=array(
                 "Email_Id"=>$email,
@@ -259,6 +264,10 @@ class Customer_api extends REST_Controller {
             $product_Name = str_replace("&nbsp;", "", $product_Name);
             $currency="INR";
             $product_price = str_replace(' ', '', preg_replace('/[^A-Za-z0-9.\-]/', '', $product_price));
+            if(updateShortURL($Product_Image_URL))
+            {
+                $Product_Image_URL=updateShortURL($Product_Image_URL);
+            }
             ///////////////////////////////////////////////////////////////// -- After processing
             $customer=array(
                 "Email_Id"=>$email,

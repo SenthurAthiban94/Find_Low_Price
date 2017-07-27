@@ -34,7 +34,7 @@ class Customer extends CI_Model{
             $check_if_exist_array=array('Email_Id'=>$customerdata['Email_Id'],"Product_ID"=>$customerdata['Product_ID']);
             $result=$this->db->select('*')->from($this->tablename)->where($check_if_exist_array)->get();
             if($result->num_rows() > 0){
-                $response=array("msg"=>"Unable to Store Details !! Already Exists!!","status"=>false);
+                $response=array("msg"=>"Alert is already set to this Product!!","status"=>false);
                 return $response;
             }
             else{

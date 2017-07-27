@@ -44,51 +44,56 @@ class Customer_api extends REST_Controller {
                 $this->response(array($result),200);
             }
             else{
-                $this->response(array("msg"=>"Customers Do Not Exist!!","status"=>false),404);
+                $this->response(array("msg"=>"Customers Do Not Exist!!","status"=>false),200);
             }
         }
     }
     public function customer_post(){
-        if(!empty($this->post('Email_Id')) && !empty($this->post('Product_Url')))
+        if(!empty($this->input->post('Email_Id')) && !empty($this->input->post('Product_Url')))
         {   
             $data_to_store=array();
             $user_email=$this->post('Email_Id');
             $product_url=$this->post('Product_Url');
-            $processedURL=parse_url($product_url);
-            $hostname=$processedURL['host'];
-            switch($hostname){
-                case $this->sites[0] :
-                case $this->sites[1] :
-                        $data_to_store=$this->amazon_products($user_email,$hostname,$product_url,$processedURL);
-                    break;
-                case $this->sites[2] :
-                        $data_to_store=$this->flipkart_products($user_email,$hostname,$product_url,$processedURL);
-                    break;
-                default  :
-                        $this->response(array("msg"=>"Product site is not an amazon or flipkart website","status"=>false),200);
-                    break;
-            }
+            $validmailId=$this->checkValidMailId($user_email);            
+            if($validmailId){
+                $processedURL=parse_url($product_url);
+                $hostname=$processedURL['host'];
+                switch($hostname){
+                    case $this->sites[0] :
+                    case $this->sites[1] :
+                            $data_to_store=$this->amazon_products($user_email,$hostname,$product_url,$processedURL);
+                        break;
+                    case $this->sites[2] :
+                            $data_to_store=$this->flipkart_products($user_email,$hostname,$product_url,$processedURL);
+                        break;
+                    default  :
+                            $this->response(array("msg"=>"Current Page is not a valid product page!!","status"=>false),200);
+                        break;
+                }
 
-            // $this->response(array("results"=>$data_to_store),200);
-            if(!empty($result=$this->Customer->addnew_customer($data_to_store))){
-                $this->response(array("msg"=>$result['msg'],"status"=>$result['status']),200);
-            }
-            else{
-                $this->response(array("msg"=>"Unable to store Details","status"=>false),404);    
+                // $this->response(array("results"=>$data_to_store),200);
+                if(!empty($result=$this->Customer->addnew_customer($data_to_store))){
+                    $this->response(array("msg"=>$result['msg'],"status"=>$result['status']),200);
+                }
+                // else{
+                //     $this->response(array("msg"=>"Unable to store Details","status"=>false),200);    
+                // }
+            }else{
+                $this->response(array("msg"=>"Please Enter a valid Email Id!!","status"=>false),200);    
             }
         }
         else{
             $errormsg="";
-            if(empty($this->post('Email_Id'))){
-                $errormsg="Invalid Email Id !!!";
+            if(empty($this->input->post('Email_Id'))){
+                $errormsg="Valid Email Id is Required !!!";
             }
-            else if(empty($this->post('Product_Url'))){
+            else if(empty($this->input->post('Product_Url'))){
                 $errormsg="Valid Product URL is required !!!";
             }
             else{
                 $errormsg="Invalid No of Parameters!!!";
             }
-            $this->response(array("msg"=>$errormsg,"status"=>false),404);
+            $this->response(array("msg"=>$errormsg,"status"=>false),200);
         }
     }
     
@@ -369,5 +374,12 @@ class Customer_api extends REST_Controller {
         }
         $Price=$Price - ($Price * $discount);
         return $Price;
+    }
+    public function checkValidMailId($email){
+        $domain = substr($email, strpos($email, '@') + 1);
+        if(checkdnsrr($domain) !== FALSE) {
+            return true;
+        }
+        return false;
     }
 }

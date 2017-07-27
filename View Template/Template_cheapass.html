@@ -1,0 +1,407 @@
+<style>
+#lcPopup {
+    font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;
+    font-size: 14px;
+    padding: 10px;
+    position: fixed;
+    top: 50%;
+    right: 0;
+    width: 265px;
+    z-index: 9999999999;
+    min-height: 300px;
+    background: #fff;
+    margin-top: -150px;
+    webkit-box-shadow: -1px 2px 7px rgba(50, 50, 50, 0.20);
+    -moz-box-shadow: -1px 2px 7px rgba(50, 50, 50, 0.20);
+    box-shadow: -1px 2px 7px rgba(50, 50, 50, 0.20);
+}
+
+#lcPopup, #lcPopup * {
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    -ms-box-sizing: border-box;
+    box-sizing: border-box;
+}
+
+#lcPopup a {
+    text-decoration: underline;
+}
+
+#lcPopup .lcProductName, #lcPopup .lcProductPrice {
+    margin-bottom: 5px;
+    font-size: 16px;
+}
+
+#lcPopup .lcProductName {
+    color: #333;
+    font-weight: 500;
+    line-height: 22px;
+}
+
+#lcPopup .lcProductPrice {
+    border-radius: 2px;
+    background: #1abc9c;
+    color: #fff;
+    padding: 6px;
+    font-weight: 700;
+    text-shadow: 0 1px 0 rgba(0,0,0,.4);
+}
+
+#lcPopup .lcQueueForm {
+    margin-bottom: 10px;
+}
+
+#lcPopup .lcQueueForm .lcFormGroup {
+    margin-top: 10px;
+}
+
+#lcPopup .lcQueueForm label{
+    font-size: 14px;
+    color: #333;
+    font-weight: 500;
+    display: block;
+    margin-bottom: 3px;
+}
+
+#lcPopup .lcQueueForm input {
+    font-size: 1rem;
+    font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;
+}
+
+#lcPopup .lcPopupLogo {
+    width: 134px;
+    margin: 0 auto;
+    display: block;
+}
+
+#lcPopup .lcFinePrint {
+    color: #999;
+    font-size: 11px;
+    text-align: center;
+    margin-bottom: 10px;
+}
+
+#lcPopup input[type="email"][disabled], #lcPopup input[type="submit"][disabled] {
+    cursor: not-allowed;
+    background-color: #eee;
+    opacity: 1;
+}
+
+#lcPopup input[type="email"] {
+    display: block;
+    width: 100%;
+    height: 34px;
+    padding: 6px 12px;
+    font-size: 14px;
+    line-height: 1.42857;
+    color: #555;
+    background-color: #fff;
+    background-image: none;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-shadow: inset 0 1px 1px rgba(0,0,0,.075);
+    transition: border-color ease-in-out .15s,box-shadow ease-in-out .15s;
+    text-indent: none;
+}
+
+#lcPopup input[type="email"]:focus {
+    border-color: #1abc9c;
+    -webkit-box-shadow: inset 0 1px 1px rgba(0,0,0,.075),0 0 6px #67b168;
+    box-shadow: inset 0 1px 1px rgba(0,0,0,.075),0 0 6px #67b168;
+    outline: 0;
+}
+
+#lcPopup input[type="submit"] {
+    display: inline-block;
+    margin-bottom: 0;
+    font-weight: 400;
+    text-align: center;
+    vertical-align: middle;
+    cursor: pointer;
+    background-image: none;
+    border: 1px solid transparent;
+    white-space: nowrap;
+    padding: 6px 12px;
+    font-size: 14px;
+    line-height: 1.42857;
+    border-radius: 4px;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    color: #fff;
+    background-color: #5bc0de;
+    border-color: #46bada;
+    text-transform: initial;
+}
+
+#lcPopup input[type="submit"][disabled] {
+    cursor: not-allowed;
+    pointer-events: none;
+    opacity: .65;
+    filter: alpha(opacity=65);
+    box-shadow: none;
+    background-color: #5bc0de;
+    border-color: #46bada;
+}
+
+#lcPopup .lcClose {
+    font-weight: 600;
+    color: #ffffff;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+#lcPopup .circle {
+    display: table;
+    line-height: 18px;
+    width: 18px;
+    height: 21px;
+    border: 2px solid #1b1719;
+    border-radius: 21px;
+    background: #1b1719;
+    font-size: 21px;
+    padding: 0px 1px 0 1px;
+}
+
+#lcPopup .lcTextSuccess {
+    font-weight: 500;
+    color: #3c763d;
+}
+
+#lcPopup .lcTextError, #lcPopup .lcTextError * {
+    font-weight: 500;
+    color: red;
+}
+
+#lcPopup .lcDownloadListWrapper {
+    max-height: 200px;
+    overflow-y: auto;
+}
+
+#lcPopup .lcDownloadList {
+    padding: 0;
+    margin: 0 0 18px 25px;
+    list-style: disc;
+}
+
+#lcPopup .lcDownloadList a {
+    color: #38d;
+    text-decoration: underline;
+    font-size: 14px;
+    line-height: 20px;
+    font-weight: normal;
+    font-variant: normal;
+    font-style: normal;
+}
+
+#lcPopup .fc-offer-link {
+    color: #2980b9;
+    font-weight: bold;
+    font-style: italic;
+    margin-top: 5px;
+    display: block;
+}
+
+#lcPopup .lcPopupLoader {
+    padding: 60px 0 40px 0;
+    text-align: center;
+}
+</style>
+
+<script>
+/*jshint quotmark: false */
+/*jslint latedef:false*/
+'use strict';
+(function(){
+    // the minimum version of jQuery we want
+    var v = '1.11.1';
+    function isCurrentjQueryOlderThan(required) {
+        var current = window.jQuery.fn.jquery;
+        var currentSplit = current.split('.').map(function(ele) {return parseInt(ele);});
+        var requiredSplit = required.split('.').map(function(ele) {return parseInt(ele);});
+        if (currentSplit[0] === requiredSplit[0]) {
+            //1.1.11 1.7.4
+            if (currentSplit[1] === requiredSplit[1]) {
+                //1.11.1 1.11.0
+                if (currentSplit[2] === requiredSplit[2]) {
+                    //1.11.1 1.11.1
+                    return true;
+                } else {
+                    return currentSplit[2] < requiredSplit[2];
+                }
+            } else {
+                return currentSplit[1] < requiredSplit[1];
+            }
+        } else {
+            return currentSplit[0] < requiredSplit[0];
+        }
+    }
+
+    // check prior inclusion and version
+    if (window.LowCostIndicator === undefined && (window.jQuery === undefined || isCurrentjQueryOlderThan(v))) {
+        var done = false;
+        var script = document.createElement('script');
+        script.src = 'https://ajax.googleapis.com/ajax/libs/jquery/' + v + '/jquery.min.js';
+        script.onload = script.onreadystatechange = function(){
+            if (!done && (!this.readyState || this.readyState === 'loaded' || this.readyState === 'complete')) {
+                done = true;
+                initLowCostIndicator();
+            }
+        };
+        document.getElementsByTagName('head')[0].appendChild(script);
+    } else {
+        initLowCostIndicator();
+    }
+
+    function initLowCostIndicator() {
+        function cssIsFetched(cssRes) {
+            if (cssRes) {
+                //Check if the user theme element is in place - if not, create it.
+                if (!$('#LowCostIndicatorCSS').length) {
+                    $('head').append('<style id="LowCostIndicatorCSS"></style>');
+                }
+
+                //populate the theme element with the new style (replace the old one if necessary)
+                $('#LowCostIndicatorCSS').text(cssRes);
+            }
+
+            window.LowCostIndicator = function() {
+                var caPopup = '#lcPopup';
+
+                var domTop =
+                  '<div id="lcPopup">' +
+                    '<a id="lcClose" class="lcClose" title="Close" style="position: absolute; left: -10px; top: -10px;"><div class="circle" style="font-size: 17px; border: 2px solid #444546; padding: 0 0 0 0; width: 26px; height: 26px; background-color:#444546; color: #fff; border-radius: 50px; text-align: center;"> x </div></a>' +
+                    '<a target="_blank" href="https://cheapass.in"><img class="lcPopupLogo" src="https://cheapass.in/cdn/cheapass.png" /></a>';
+
+                var domFinePrintSeller =
+                  '<p class="lcFinePrint">Get notified when the prices drop</p>';
+
+                var domFinePrintSite =
+                  '<p class="lcFinePrint">A LowCostIndicator doesn\'t pay for stuff.</p>';
+
+                var domBottom =
+                  '</div>';
+
+                var url = document.location.href;
+
+                //remove the popup if exists
+                function removePopup() {
+                    if ($(caPopup).length) {
+                        $(caPopup).remove();
+                    }
+                }
+
+                removePopup();
+
+                function showEmailInputToQueueProduct() {
+                    var dom =
+                      domTop +
+                      domFinePrintSeller +
+                      '<form id="lcQueueForm" class="lcQueueForm">' +
+                        '<input type="hidden" name="url" value="' + url + '" />' +
+                        '<input type="hidden" name="source" value="bookmarklet" />' +
+                        '<input type="hidden" name="jsonp" value="1" />' +
+                        '<div class="lcFormGroup">' +
+                          '<label for="lcFormUserEmail">Email</label>' +
+                          '<input required autofocus type="email" class="email email_lowcost" name="email" placeholder="Email" />' +
+                        '</div>' +
+                        '<div class="lcFormGroup">' +
+                          '<input type="submit" value="Set Alert" />' +
+                        '</div>' +
+                      '</form>'+
+                      '<p style="font-size: 12px; color: #ababab; font-style: italic;">By clicking "Set Alert", you allow us to send price drop alerts on this email id.</p>'+
+                      '<p style="font-size: 12px; color: #ababab; font-style: italic;">You\'ll receive an email to verify your email id if you are a new user.</p>'+
+                      '<p></p>'+
+                    domBottom;
+
+                    $('body').append(dom);
+
+                    if ('localStorage' in window) {
+                        var userEmail = localStorage.getItem('LowCostIndicatorUserEmail');
+                        if (userEmail) {
+                            $('#lcQueueForm').find('.email').val(userEmail).focus();
+                        }
+                    }
+
+                    $('#lcQueueForm').on('submit', handleQueueFormSubmit);
+                    $('#lcClose').on('click', function () {
+                      removePopup();
+                    });
+                }
+
+                function handleQueueFormSubmit(e) {
+                    e.preventDefault();
+                    var mailId=document.getElementsByClassName('email_lowcost')[0].value,
+                        currentURL=window.location.href;
+                    $.ajax({  
+                                url: "/CR_apis/cheapAss_api/v1/customer_details",  
+                                headers: { "Content-Type": "application/x-www-form-urlencoded","x-api-key" : "9524898941"},
+                                type: "POST",
+                                data : {
+                                            "Email_Id": mailId,
+                                            "Product_Url":currentURL 
+                                        },
+                                cache: false,
+                                success:ResponseHandler
+                            });  
+
+                    if ('localStorage' in window) {
+                        var email = $('#lcQueueForm').find('.email').val();
+                        localStorage.setItem('LowCostIndicatorUserEmail', email);
+                    }
+                    $('#lcQueueForm input').attr('disabled', 'disabled');
+                }
+
+                function ResponseHandler(res) {
+                    console.log(res);
+                    var isError = !res.status;
+                    console.log(isError);
+                    var classname = isError ? 'lcTextError' : 'lcTextSuccess';
+                    var message = isError ? res.msg : "Fantastic You will get Notified when your product price drops!";
+
+                    var messageDOM = '<p class="'+ classname +'">' + message + '</p>'
+
+                    $('#lcQueueForm')
+                    .find('.lcTextError')
+                    .remove();
+
+                    if (isError) {
+                      $('#lcQueueForm')
+                      .append(messageDOM);
+
+                      $('#lcQueueForm input').removeAttr('disabled');
+
+                    } else {
+                      $('#lcQueueForm')
+                      .find('input[type="submit"]')
+                      .remove()
+                      .end()
+                      .append(
+                        messageDOM
+                      )
+                    }
+
+                }
+
+                showEmailInputToQueueProduct();
+            };
+
+            window.LowCostIndicator();
+
+        }
+
+        if (window.LowCostIndicator) {
+            cssIsFetched();
+        } else {
+            // $.ajax({
+            //     url: 'https://cheapass.in/cdn/cheapass.css?ts=' + new Date().getTime(),
+            //     type: 'get',
+            //     crossDomain: true,
+            //     success: cssIsFetched
+            // });
+            cssIsFetched();
+        }
+    }
+})();
+</script>

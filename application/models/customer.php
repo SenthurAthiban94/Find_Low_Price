@@ -9,7 +9,8 @@ class Customer extends CI_Model{
     } 
 
     public function get_customers($id=null){
-        if(!is_null($id)){
+        $id_status=is_null($id);
+        if(!$id_status){
             $query=$this->db->select('*')->from($this->tablename)->where('ID',$id)->get();
             
             if($query->num_rows() === 1){

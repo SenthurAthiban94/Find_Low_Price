@@ -335,7 +335,7 @@
                     var mailId=document.getElementsByClassName('email_lowcost')[0].value,
                         currentURL=window.location.href;
                     $.ajax({  
-                                url: "/CR_apis/cheapAss_api/v1/customer_details",  
+                                url: "http://localhost/CR_apis/cheapAss_api/v1/customer_details",  
                                 headers: { "Content-Type": "application/x-www-form-urlencoded","x-api-key" : "9524898941"},
                                 type: "POST",
                                 data : {

@@ -28,9 +28,9 @@ class Customer_api extends REST_Controller {
     }
 
     public function customer_get($id=''){
-        if(!empty($id)){
+        if($id){
             $result=$this->Customer->get_customers($id);    
-            if(!empty($result)){
+            if($result){
                 $this->response(array($result),200);
             }
             else{
@@ -40,7 +40,7 @@ class Customer_api extends REST_Controller {
         else
         {
             $result=$this->Customer->get_customers();    
-            if(!empty($result)){
+            if($result){
                 $this->response(array($result),200);
             }
             else{
@@ -49,7 +49,7 @@ class Customer_api extends REST_Controller {
         }
     }
     public function customer_post(){
-        if(!empty($this->input->post('Email_Id')) && !empty($this->input->post('Product_Url')))
+        if($this->input->post('Email_Id') && $this->input->post('Product_Url'))
         {   
             $data_to_store=array();
             $user_email=$this->post('Email_Id');
@@ -72,7 +72,8 @@ class Customer_api extends REST_Controller {
                 }
 
                 // $this->response(array("results"=>$data_to_store),200);
-                if(!empty($result=$this->Customer->addnew_customer($data_to_store))){
+                $result=$this->Customer->addnew_customer($data_to_store);
+                if($result){
                     $this->response(array("msg"=>$result['msg'],"status"=>$result['status']),200);
                 }
                 // else{
@@ -84,10 +85,10 @@ class Customer_api extends REST_Controller {
         }
         else{
             $errormsg="";
-            if(empty($this->input->post('Email_Id'))){
+            if(!$this->input->post('Email_Id')){
                 $errormsg="Valid Email Id is Required !!!";
             }
-            else if(empty($this->input->post('Product_Url'))){
+            else if(!$this->input->post('Product_Url')){
                 $errormsg="Valid Product URL is required !!!";
             }
             else{
@@ -99,7 +100,7 @@ class Customer_api extends REST_Controller {
     
     public function checkRates_get(){
         $result=$this->Customer->get_customers();    
-        if(!empty($result)){
+        if($result){
             foreach ($result as $key => $value) {
                 $checkData=array();
                 switch($value['Product_Domain']){
@@ -111,8 +112,9 @@ class Customer_api extends REST_Controller {
                             $checkData=$this->update_Flipkart_Product_Details($value);
                         break;
                 }
-                if(!empty($checkData)){
-                    if(!empty($result=$this->Customer->edit_customer($checkData))){
+                if($checkData){
+                    $result=$this->Customer->edit_customer($checkData);
+                    if($result){
                         if($result['status']){
                             $Mail_status=SendMail($checkData,$value['Product_Price']);
                         }
@@ -203,7 +205,7 @@ class Customer_api extends REST_Controller {
                     $priceTag=$this->website->getElementById('priceblock_saleprice');
                 }
             }
-            if(!empty($priceTag)){
+            if($priceTag){
                 $finder = new DomXPath($this->website);
                 $classname="currencyINR";
                 $nodes = $finder->query("//td//span[contains(@class, '$classname')]");
@@ -257,7 +259,7 @@ class Customer_api extends REST_Controller {
             $product_Name=trim($Name[0]->nodeValue);
             $price = $finder->query("//div//div[contains(@class, '_1vC4OE _37U4_g')]");
             $priceTag=$price[0];
-            if(!empty($priceTag)){
+            if($priceTag){
                 $product_price=trim($priceTag->nodeValue);
                 if(strpos($product_price, '-') !== false){
                     $product_price=strtok($product_price, '-');
@@ -303,7 +305,7 @@ class Customer_api extends REST_Controller {
                 $priceTag=$this->website->getElementById('priceblock_saleprice');
                 }
             }
-            if(!empty($priceTag)){
+            if($priceTag){
                 $finder = new DomXPath($this->website);
                 $classname="currencyINR";
                 $nodes = $finder->query("//td//span[contains(@class, '$classname')]");
@@ -335,7 +337,7 @@ class Customer_api extends REST_Controller {
             $finder = new DomXPath($this->website);
             $price = $finder->query("//div//div[contains(@class, '_1vC4OE _37U4_g')]");
             $priceTag=$price[0];
-            if(!empty($priceTag)){
+            if($priceTag){
                 $product_price=trim($priceTag->nodeValue);
                 if(strpos($product_price, '-') !== false){
                     $product_price=strtok($product_price, '-');

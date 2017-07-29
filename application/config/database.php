@@ -75,10 +75,10 @@ $query_builder = TRUE;
 
 $db['default'] = array(
 	'dsn'	=> '',
-	'hostname' => 'localhost',
-	'username' => 'root',
-	'password' => '',
-	'database' => 'cheapass',
+	'hostname' => 'localhost', 						//'127.8.159.130',
+	'username' => 'root',							//'adminWBKgaxg',
+	'password' => '',								//'RHyvzEKJ1Lux',
+	'database' => 'cheapass',								//'lowcostindicator',
 	'dbdriver' => 'mysqli',
 	'dbprefix' => '',
 	'pconnect' => FALSE,

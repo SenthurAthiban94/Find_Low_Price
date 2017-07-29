@@ -196,7 +196,9 @@ class Customer_api extends REST_Controller {
         $unique_Product_Path = implode('/', array_slice($splitURL, 0, 4));
         if((strpos($path, '/dp/') !== false) || (strpos($path, '/gp/product/') !== false)) {
             $this->website->loadHTMLFile($url);
-            $Product_Image_URL=strtok($this->website->getElementById('imgTagWrapperId')->getElementsByTagName('img')[0]->getAttribute('src'),'?');
+            $Product_Image_URL_object=$this->website->getElementById('imgTagWrapperId')->getElementsByTagName('img');
+            $Product_Image_URL_array=iterator_to_array($Product_Image_URL_object);
+            $Product_Image_URL=strtok($Product_Image_URL_array[0]->getAttribute('src'),'?');
             if($this->website->getElementById('priceblock_ourprice')){
                 $priceTag=$this->website->getElementById('priceblock_ourprice');
             }
@@ -210,6 +212,7 @@ class Customer_api extends REST_Controller {
                 $classname="currencyINR";
                 $nodes = $finder->query("//td//span[contains(@class, '$classname')]");
                 $length=$nodes->length;
+                $nodes=iterator_to_array($nodes);
                 if($length){
                     for($i=0;$i<$length;$i++){
                         $nodes[$i]->removeAttribute('class');
@@ -226,10 +229,12 @@ class Customer_api extends REST_Controller {
                 $product_price="9999";
             }
             $product_price = str_replace(' ', '', preg_replace('/[^A-Za-z0-9.\-]/', '', $product_price));
-            if(updateShortURL($Product_Image_URL))
-            {
-                $Product_Image_URL=updateShortURL($Product_Image_URL);
-            }
+            
+            // Uncomment to enable shortenURL for images
+            // if(updateShortURL($Product_Image_URL))
+            // {
+            //     $Product_Image_URL=updateShortURL($Product_Image_URL);
+            // }
             ///////////////////////////////////////////////////////////////// -- After processing
             $customer=array(
                 "Email_Id"=>$email,
@@ -271,10 +276,13 @@ class Customer_api extends REST_Controller {
             $product_Name = str_replace("&nbsp;", "", $product_Name);
             $currency="INR";
             $product_price = str_replace(' ', '', preg_replace('/[^A-Za-z0-9.\-]/', '', $product_price));
-            if(updateShortURL($Product_Image_URL))
-            {
-                $Product_Image_URL=updateShortURL($Product_Image_URL);
-            }
+            
+            
+            // Uncomment to enable shortenURL for images
+            // if(updateShortURL($Product_Image_URL))
+            // {
+            //     $Product_Image_URL=updateShortURL($Product_Image_URL);
+            // }
             ///////////////////////////////////////////////////////////////// -- After processing
             $customer=array(
                 "Email_Id"=>$email,
@@ -310,6 +318,7 @@ class Customer_api extends REST_Controller {
                 $classname="currencyINR";
                 $nodes = $finder->query("//td//span[contains(@class, '$classname')]");
                 $length=$nodes->length;
+                $nodes=iterator_to_array($nodes);
                 if($length){
                     for($i=0;$i<$length;$i++){
                         $nodes[$i]->removeAttribute('class');
@@ -336,6 +345,7 @@ class Customer_api extends REST_Controller {
         if($LoadContent){
             $finder = new DomXPath($this->website);
             $price = $finder->query("//div//div[contains(@class, '_1vC4OE _37U4_g')]");
+            $price=iterator_to_array($price);
             $priceTag=$price[0];
             if($priceTag){
                 $product_price=trim($priceTag->nodeValue);

@@ -20,7 +20,9 @@ function updateShortURL($url){
     }
     // Decode the response
     $shortenURL_response= json_decode($response, TRUE);
-    return $shortenURL_response['id'];
+    //return $shortenURL_response['id'];
+    echo json_encode($shortenURL_response);
+    
 }
 
 function getLongURL($url){
